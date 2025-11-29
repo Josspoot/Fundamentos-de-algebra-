@@ -33,7 +33,7 @@ h1 {
 }
 
 h3 {
-  color: #2a5298;
+  color: #7292a5;
   margin-bottom: 15px;
   font-size: 18px;
   font-weight: 500;
@@ -65,6 +65,8 @@ textarea {
 textarea:focus {
   outline: none;
   border-color: #2a5298;
+  transition: 0.5s;
+  background-color: #e0e0e0;
 }
 
 .char-count {
@@ -104,6 +106,8 @@ textarea:focus {
 .matriz-input input:focus {
   outline: none;
   border-color: #2a5298;
+  transition: 0.5s;
+  background-color: #e0e0e0;
 }
 
 button {
@@ -137,8 +141,11 @@ button:active {
   border: 2px solid #e0e0e0;
   min-height: 60px;
   font-family: "Courier New", monospace;
-  color: #333;
+  color: #144249;
   word-wrap: break-word;
+}
+.resultado-box:hover {
+  background-color: #ffffff;
 }
 
 .error {
