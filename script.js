@@ -6,7 +6,9 @@ const k12 = document.getElementById("k12");
 const k21 = document.getElementById("k21");
 const k22 = document.getElementById("k22");
 const btnEncriptar = document.getElementById("encriptar");
+const btnDesencriptar = document.getElementById("desencriptar");
 const resultado = document.getElementById("resultado");
+const resultado2 = document.getElementById("resultado2");
 
 // Actualizar contador de caracteres
 mensaje.addEventListener("input", () => {
@@ -57,7 +59,7 @@ btnEncriptar.addEventListener("click", () => {
     key[1][0] === 0 &&
     key[1][1] === 0
   ) {
-    resultado.textContent = "Error: Ingresa una matriz clave vÃ¡lida";
+    resultado.textContent = "Error: Ingresa una matriz clave válida";
     resultado.classList.add("error");
     return;
   }
@@ -103,4 +105,59 @@ btnEncriptar.addEventListener("click", () => {
 
   resultado.classList.remove("error");
   resultado.textContent = encriptado;
+});
+
+function mod(n, m) {
+  return ((n % m) + m) % m;
+}
+
+function modInverse(a, m) {
+  a = mod(a, m);
+  for (let x = 1; x < m; x++) {
+    if (mod(a * x, m) === 1) return x;
+  }
+  return null;
+}
+
+btnDesencriptar.addEventListener("click", () => {
+  const key = [
+    [parseInt(k11.value) || 0, parseInt(k12.value) || 0],
+    [parseInt(k21.value) || 0, parseInt(k22.value) || 0],
+  ];
+
+  const texto = mensaje.value.toUpperCase().replace(/[^A-Z]/g, "");
+
+  // Convertir a números
+  let nums = texto.split("").map((c) => c.charCodeAt(0) - 65);
+
+  // Determinante
+  const det = mod(key[0][0] * key[1][1] - key[0][1] * key[1][0], 26);
+
+  const detInv = modInverse(det, 26);
+  if (!detInv) {
+    resultado2.textContent = "La matriz no es invertible.";
+    return;
+  }
+
+  // Matriz inversa mod 26
+  const invKey = [
+    [mod(detInv * key[1][1], 26), mod(detInv * -key[0][1], 26)],
+    [mod(detInv * -key[1][0], 26), mod(detInv * key[0][0], 26)],
+  ];
+
+  // Desencriptar
+  let salida = "";
+
+  for (let i = 0; i < nums.length; i += 2) {
+    const c1 = nums[i];
+    const c2 = nums[i + 1];
+
+    const p1 = mod(invKey[0][0] * c1 + invKey[0][1] * c2, 26);
+    const p2 = mod(invKey[1][0] * c1 + invKey[1][1] * c2, 26);
+
+    salida += String.fromCharCode(65 + p1);
+    salida += String.fromCharCode(65 + p2);
+  }
+
+  resultado2.textContent = salida;
 });
